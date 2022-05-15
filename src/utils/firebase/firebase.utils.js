@@ -1,17 +1,13 @@
-
 import { initializeApp } from "firebase/app";
-import { getAuth,
-         signInWithRedirect,
-         signInWithPopup,
-         GoogleAuthProvider,
-         createUserWithEmailAndPassword  
-    } from "firebase/auth";
+import {
+  getAuth,
+  signInWithRedirect,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
-    import { getFirestore,
-        doc,
-        getDoc,
-        setDoc
-    } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8g2bufC2tKqU0Brm_J58yWNv02KCTRHI",
@@ -24,50 +20,51 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
-
 const googleprovider = new GoogleAuthProvider();
 googleprovider.setCustomParameters({
-    prompt:"select_account"
+  prompt: "select_account",
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopups = () => signInWithPopup(auth,googleprovider);
-export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleprovider);
-
+export const signInWithGooglePopups = () =>
+  signInWithPopup(auth, googleprovider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleprovider);
 
 export const db = getFirestore();
-export  const createUserDocumentFromAuth = async (userAuth) => {
-    if(!userAuth) return;
-    const userDocRef = doc(db,'users', userAuth.uid);
-    
-    console.log(userDocRef);
+export const createUserDocumentFromAuth = async (
+  userAuth,
+  additionalInoformation = {}
+) => {
+  if (!userAuth) return;
+  const userDocRef = doc(db, "users", userAuth.uid);
 
-    const userSnapShot = await getDoc(userDocRef);
-    console.log(userSnapShot)
-    console.log(userSnapShot.exists());
+  console.log(userDocRef);
 
+  const userSnapShot = await getDoc(userDocRef);
+  console.log(userSnapShot);
+  console.log(userSnapShot.exists());
 
-    if(!userSnapShot.exists()){
-        const {displayName,email} = userAuth;
-        const createdAt = new Date();
+  if (!userSnapShot.exists()) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
 
-        try {
-            await setDoc(userDocRef,{
-                displayName,
-                email,
-                createdAt
-            });
-        } catch (error) {
-            console.log('error creating user',error.message);
-        }
+    try {
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInoformation,
+      });
+    } catch (error) {
+      console.log("error creating user", error.message);
     }
+  }
 
+  return userDocRef;
+};
 
-    return userDocRef
-    
-}
-
-export const createAuthUserWithEmailAndPassword =  async (email,passwrod) => {
-    if(!email || !passwrod) return;
-   return await createUserWithEmailAndPassword(auth,email,passwrod);
-}
+export const createAuthUserWithEmailAndPassword = async (email, passwrod) => {
+  if (!email || !passwrod) return;
+  return await createUserWithEmailAndPassword(auth, email, passwrod);
+};
