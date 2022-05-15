@@ -6,8 +6,10 @@ import {
   auth,
 } from "../../utils/firebase/firebase.utils";
 
+
 import { getRedirectResult } from "firebase/auth";
 import SignUPForm from "../../components/sign-up-form/sign-up-form.component";
+import Button from '../../components/button/button.component';
 
 
 const SignIn = () => {
@@ -28,10 +30,8 @@ const SignIn = () => {
   return (
     <div>
       <h1>I am sign in page</h1>
-      <button onClick={logGoogleUser}>Sign in with Google Popups</button>
-      <button onClick={signInWithGoogleRedirect}>
-        Sign in with Google Redirect
-      </button>
+      <Button buttonType='google'   onClick={logGoogleUser}>Sign in with Google Popups</Button>
+      
       <SignUPForm />
     </div>
   );
