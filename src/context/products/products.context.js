@@ -1,18 +1,26 @@
-import { createContext, useState } from "react";
-import PRODUCTS from "../../shop-data.json";
-
-export const ProductsContext = createContext({
-  products: [],
+import { createContext, useState,useEffect } from "react";
+import SHOP_DATA from "../../shop-data.js";
+import { getCategoriesAndDocument, addCollectionAndDocuments } from "../../utils/firebase/firebase.utils.js";
+export const CategoriesContext = createContext({
+  categoires: {},
 });
 
-export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState(PRODUCTS);
-  const value = { products };
+export const CategoriesProvider = ({ children }) => {
+  const [categoriesMap,setCategoriesMap ] = useState({});
+  useEffect(() => {
+    (async () => {
+      //await addCollectionAndDocuments('categories',SHOP_DATA);
+       const categoryMap = await getCategoriesAndDocument();
+       console.log(categoryMap);
+       setCategoriesMap(categoryMap);
+    })()
+  },[]);
+  const value = { categoriesMap };
 
   return (
-    <ProductsContext.Provider value={value}>
-      {" "}
+    <CategoriesContext.Provider value={value}>
+     
       {children}{" "}
-    </ProductsContext.Provider>
+    </CategoriesContext.Provider>
   );
 };
