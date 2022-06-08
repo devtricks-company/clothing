@@ -7,7 +7,7 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-
+import { BUTTON_TYPE_CLASSESS } from "../button/button.component";
 import "./sign-in-form.styles.scss";
 
 
@@ -84,7 +84,7 @@ const SignInForm = () => {
             Sign In
           </Button>
 
-          <Button type="button" buttonType="google" onClick={logGoogleUser}>
+          <Button type="button" buttonType={BUTTON_TYPE_CLASSESS.google} onClick={logGoogleUser}>
             Google Sign In
           </Button>
         </div>
